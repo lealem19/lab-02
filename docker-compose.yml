@@ -1,1 +1,45 @@
-#TODO: Complete the docker compose file
+name: vaultwarden
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    cpus: 1.0
+    restart: unless-stopped
+    mem_limit: 512m
+    ports:
+      - 8080:80
+    environment:
+      ADMIN_TOKEN_FILE: /run/secrets/admin_pw
+      LOG_LEVEL: info
+      TZ: UTC
+    secrets:
+      - admin_pw
+    volumes:
+      - vw:/data
+volumes:
+  vw:
+
+secrets:
+  admin_pw:
+    file: admin_pw.txt
+# secrets:
+#   token:
+#     environment: "OAUTH_TOKEN"
+# secrets:
+#  token:
+#    ADMIN_TOKEN: "youwillnevergetthis"
+#    # memory:513m
+# cpus: 2.0
+#
+#
+# docker run -d \
+#   --name vaultwarden \
+#   --restart unless-stopped \
+#   --publish 8080:80 \
+#   --volume vw-data:/data \
+#   -e ADMIN_TOKEN=youwillnevergetthis \
+#   -e LOG_LEVEL=info \
+#   -e TZ=UTC \
+#   --memory="512m" \
+#   --cpus="1.0" \
+#   vaultwarden/server:latest
